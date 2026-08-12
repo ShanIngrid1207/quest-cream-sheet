@@ -15,6 +15,10 @@
    QUEST DRAFTING — "CREAM SHEET"
    Same brand colors as the live site, dominance inverted:
    cream page, graphite line-work, one hot orange.
+
+   The whole site sits inside one dashboard shell: the two rails
+   pin to the viewport while the centre column carries every
+   section past them.
    ============================================================ */
 :root{
   --paper:#EAE7E1;      /* cream page */
@@ -28,7 +32,6 @@
   --brand:#E8552B;      /* logo orange */
   --brand-dk:#B23D18;   /* burnt orange — small text safe */
   --peach:#F7DBCD;      /* orange tinted into cream */
-  --peach-2:#F1C7AF;
   --dark:#191B1D;       /* the two dark surfaces */
   --steel:#58595B;
 
@@ -39,15 +42,16 @@
 
   --r:16px;
   --eo:cubic-bezier(.23,1,.32,1);
+  --gut:clamp(14px,1.5vw,34px);   /* outer page gutter */
+  --pad:clamp(20px,2.1vw,44px);   /* inner section padding */
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   font-family:var(--sans);background:var(--paper);color:var(--ink);
-  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
-  overflow-x:hidden;position:relative;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;position:relative;
 }
-/* paper grain — keeps the cream from reading as flat #fff-ish plastic */
+/* paper grain — keeps the cream from reading as flat plastic */
 body::before{
   content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.32;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
@@ -60,13 +64,36 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--brand-dk);outline-offset:3px;border-radius:3px}
 .vh{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-/* full-bleed: the page fills the monitor, gutters stay proportional */
-.wrap{width:100%;max-width:none;margin:0 auto;padding:0 clamp(16px,1.7vw,40px)}
+/* ============================================================
+   THE SHELL
+   ============================================================ */
+.page{padding:var(--gut)}
+.app{
+  border:1px solid var(--line-2);border-radius:22px;background:var(--sheet);
+  display:grid;grid-template-columns:286px minmax(0,1fr) 274px;
+  box-shadow:0 26px 60px -44px rgba(22,24,26,.55);
+  /* no overflow:hidden here — it would kill the sticky rails */
+}
+
+/* rails pin to the viewport; the centre column scrolls past them */
+.rail{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+.rail::-webkit-scrollbar{width:5px}
+.rail::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
+
+/* the divider lines live on the feed so they run the full page height */
+.feed{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+
+.rail-l{padding:22px 20px;display:flex;flex-direction:column;gap:18px}
+.rail-r{padding:22px 18px;display:flex;flex-direction:column;gap:14px}
+
+/* section rhythm inside the feed */
+.fsec{padding:var(--pad);border-top:1px solid var(--line)}
+.fsec:first-of-type{border-top:0}
 
 /* ---------- shared atoms ---------- */
 .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
 .mute{color:var(--mute)}
-.rule{height:1px;background:var(--line);border:0}
 
 .pill{
   display:inline-flex;align-items:center;gap:8px;
@@ -87,30 +114,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .box.lift:hover{transform:translateY(-3px);box-shadow:0 10px 0 -6px rgba(22,24,26,.14);border-color:var(--ink)}
 
-/* section heads */
-.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:22px}
-.shead h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,4.3vw,78px);line-height:.94;letter-spacing:.005em;text-transform:uppercase}
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.shead h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,3.6vw,64px);line-height:.94;letter-spacing:.005em;text-transform:uppercase}
 .shead .tick{display:flex;align-items:center;gap:10px}
 .shead .tick i{width:7px;height:7px;background:var(--brand);border-radius:50%;display:block}
 
-section{padding:74px 0}
-
 /* ============================================================
-   1 — HERO : the framed window
+   LEFT RAIL
    ============================================================ */
-.hero{padding:26px 0 40px}
-.win{
-  border:1px solid var(--line-2);border-radius:22px;background:var(--sheet);
-  display:grid;grid-template-columns:214px 1fr 208px;
-  overflow:hidden;box-shadow:0 26px 60px -40px rgba(22,24,26,.55);
-}
-.win>*{min-width:0}
-
-/* --- left rail --- */
-.rail-l{border-right:1px solid var(--line);padding:18px 16px;display:flex;flex-direction:column;gap:16px}
 .newbtn{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
-  border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;background:var(--paper);
+  border:1px solid var(--line-2);border-radius:10px;padding:9px 11px;background:var(--paper);
   transition:border-color .3s var(--eo)}
 .newbtn:hover{border-color:var(--brand)}
 .newbtn b{font-family:var(--mono);font-size:10px;letter-spacing:.16em;font-weight:700}
@@ -118,28 +132,54 @@ section{padding:74px 0}
 
 .nav-l{display:flex;flex-direction:column;gap:3px}
 .nav-l a{
-  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;
-  font-size:13px;font-weight:500;color:var(--ink-2);
+  display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;
+  font-size:13.5px;font-weight:500;color:var(--ink-2);
   transition:background .3s var(--eo),color .3s var(--eo)}
 .nav-l a svg{width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6}
 .nav-l a:hover,.nav-l a.on{background:var(--paper-2);color:var(--ink)}
 
-.log{display:flex;flex-direction:column;gap:16px;padding-top:4px;border-top:1px solid var(--line);margin-top:auto}
+.log{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:4px}
 .log-h{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px}
 .log-h b{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--brand-dk);font-weight:700}
 .log-h span{font-family:var(--mono);font-size:10px;color:var(--mute)}
 .log p{font-size:11.5px;line-height:1.5;color:var(--mute)}
 
-/* --- center --- */
-.main{padding:18px 26px 26px;display:flex;flex-direction:column;gap:16px}
-.wordmark{display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.railcta{margin-top:6px;border-top:1px solid var(--line);padding-top:16px}
+.railcta .pill{width:100%;justify-content:center}
+
+/* ============================================================
+   RIGHT RAIL
+   ============================================================ */
+.mark{width:40px;height:40px;border-radius:50%;background:var(--brand);display:grid;place-items:center;color:#fff;font-family:var(--display);font-size:19px}
+.who b{display:block;font-size:13px;font-weight:700;line-height:1.3}
+.who span{font-size:11px;color:var(--mute)}
+.insights{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.insights .ih{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mute);padding:12px 0 8px}
+.irow{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:flex-start}
+.irow i{width:22px;height:22px;flex:none;border:1px solid var(--line-2);border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--brand-dk);font-style:normal}
+.irow div b{display:block;font-size:11.5px;font-weight:700;line-height:1.35}
+.irow div span{font-size:10.5px;color:var(--mute);line-height:1.35;display:block}
+.rail-r .pill.solid{justify-content:center;width:100%}
+.rail-note{font-size:10.5px;line-height:1.5;color:var(--mute);border-top:1px solid var(--line);padding-top:12px}
+
+/* ============================================================
+   FEED HEADER (sticks to the top of the centre column)
+   ============================================================ */
+.wordmark{
+  position:sticky;top:0;z-index:6;background:var(--sheet);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px var(--pad);border-bottom:1px solid var(--line)}
 .wm{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.2em;font-weight:700}
 .wm i{width:12px;height:12px;border:2.5px solid var(--brand);border-radius:50%;display:block}
+
+/* ============================================================
+   HERO BLOCK
+   ============================================================ */
+.hero-sec{display:flex;flex-direction:column;gap:16px}
 .main-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 h1{
   font-family:var(--display);font-weight:400;text-transform:uppercase;
-  font-size:clamp(34px,5vw,96px);line-height:.93;letter-spacing:.004em;
+  font-size:clamp(34px,4.4vw,86px);line-height:.93;letter-spacing:.004em;
 }
 h1 .cur{color:var(--brand);animation:blink 1.15s steps(1) infinite}
 @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
@@ -150,315 +190,250 @@ h1 .cur{color:var(--brand);animation:blink 1.15s steps(1) infinite}
   transition:transform .5s var(--eo)}
 .orb:hover{transform:rotate(-12deg) scale(1.06)}
 .orb svg{width:20px;height:20px;fill:currentColor}
+.getstarted{font-family:var(--display);font-weight:400;font-size:22px;text-transform:uppercase;color:var(--ink-2)}
 
-.getstarted{font-family:var(--display);font-weight:400;font-size:22px;text-transform:uppercase;letter-spacing:.01em;color:var(--ink-2)}
-
-/* dark photo card */
-.plate{
-  position:relative;border-radius:999px;overflow:hidden;background:var(--dark);
-  height:112px;display:grid;place-items:center;
-}
+.plate{position:relative;border-radius:999px;overflow:hidden;background:var(--dark);height:140px;display:grid;place-items:center}
 .plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.72}
 .plate::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(25,27,29,.86),rgba(25,27,29,.25) 55%,rgba(25,27,29,.86))}
-.plate .lab{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 34px}
-.plate .lab b{font-family:var(--display);font-size:21px;letter-spacing:.06em;color:#F7F5F1;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.plate .lab{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 40px}
+.plate .lab b{font-family:var(--display);font-size:24px;letter-spacing:.06em;color:#F7F5F1;text-transform:uppercase;display:flex;align-items:center;gap:9px}
 .plate .lab b.ghost{color:rgba(247,245,241,.42)}
 
-/* question cards */
 .qs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .qcard{
   border:1px solid var(--line-2);border-radius:14px;background:var(--paper);
-  padding:12px;display:flex;flex-direction:column;gap:10px;min-height:150px;
+  padding:13px;display:flex;flex-direction:column;gap:10px;min-height:142px;
   transition:transform .4s var(--eo),border-color .4s var(--eo)}
 .qcard:hover{transform:translateY(-3px);border-color:var(--ink)}
 .qcard .qtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.qcard .thumb{width:42px;height:34px;border-radius:7px;object-fit:cover;border:1px solid var(--line)}
+.qcard .thumb{width:46px;height:36px;border-radius:7px;object-fit:cover;border:1px solid var(--line)}
 .qcard .flag{font-family:var(--mono);font-size:9px;letter-spacing:.13em;color:var(--brand-dk);font-weight:700}
 .qcard .dot{width:26px;height:26px;border-radius:50%;background:var(--brand);flex:none}
-.qcard p{font-size:12.5px;line-height:1.45;color:var(--ink-2);margin-top:auto}
+.qcard p{font-size:13px;line-height:1.45;color:var(--ink-2);margin-top:auto}
 
-/* title block — anchors the bottom of the centre column */
-.titleblock{
-  margin-top:auto;padding-top:14px;border-top:1px solid var(--line);
-  display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.titleblock{padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:26px;flex-wrap:wrap}
 .titleblock span{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--ink-2)}
 .titleblock b{display:block;color:var(--mute);font-weight:500;font-size:8.5px;letter-spacing:.16em;margin-bottom:3px}
-.titleblock .stamp{
-  margin-left:auto;border:1.5px solid var(--brand);color:var(--brand-dk);
-  border-radius:4px;padding:5px 10px;transform:rotate(-1.5deg);font-weight:700}
-
-/* --- right rail --- */
-.rail-r{border-left:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:14px}
-.mark{width:40px;height:40px;border-radius:50%;background:var(--brand);display:grid;place-items:center;color:#fff;font-family:var(--display);font-size:19px;letter-spacing:.02em}
-.rail-r .who b{display:block;font-size:13px;font-weight:700;line-height:1.3}
-.rail-r .who span{font-size:11px;color:var(--mute)}
-.insights{display:flex;flex-direction:column;border-top:1px solid var(--line);margin-top:2px}
-.insights .ih{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--mute);padding:12px 0 8px}
-.irow{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);align-items:flex-start}
-.irow i{width:22px;height:22px;flex:none;border:1px solid var(--line-2);border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--brand-dk);font-style:normal}
-.irow div b{display:block;font-size:11.5px;font-weight:700;line-height:1.35}
-.irow div span{font-size:10.5px;color:var(--mute);line-height:1.35;display:block}
-.rail-r .callpill{margin-top:auto;justify-content:center;width:100%}
+.titleblock .stamp{margin-left:auto;border:1.5px solid var(--brand);color:var(--brand-dk);border-radius:4px;padding:5px 10px;transform:rotate(-1.5deg);font-weight:700}
 
 /* ============================================================
-   2 — SERVICES
+   SERVICES
    ============================================================ */
-.svc4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:44px}
-.svc4 article{padding:20px 18px 22px;display:flex;flex-direction:column;gap:12px;min-height:230px}
+.svc4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:34px}
+.svc4 article{padding:20px 18px 22px;display:flex;flex-direction:column;gap:12px;min-height:236px}
 .svc4 .top{display:flex;justify-content:space-between;align-items:center}
 .svc4 .no{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--brand-dk);font-weight:700}
 .svc4 .tag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;border:1px solid var(--line-2);border-radius:4px;padding:3px 6px;color:var(--mute)}
-.svc4 h3{font-family:var(--display);font-weight:400;font-size:24px;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.svc4 h3{font-family:var(--display);font-weight:400;font-size:25px;line-height:1;text-transform:uppercase}
 .svc4 p{font-size:13px;line-height:1.55;color:var(--ink-2)}
-.svc4 .arrow{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--brand-dk);display:flex;align-items:center;gap:6px}
-.svc4 article:hover .arrow{gap:12px;transition:gap .3s var(--eo)}
+.svc4 .arrow{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--brand-dk);display:flex;align-items:center;gap:6px;transition:gap .3s var(--eo)}
+.svc4 article:hover .arrow{gap:12px}
 
-/* --- the spec sheet slab --- */
 .slab{border:1.5px solid var(--ink);border-radius:20px;overflow:hidden;background:var(--sheet)}
-.slab-bar{
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;
-  padding:12px 18px;border-bottom:1px solid var(--line-2);background:var(--paper-2)}
-.chips{display:flex;align-items:center;gap:7px}
-.chip{
-  width:54px;height:26px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:999px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--ink-2);
-  transition:all .3s var(--eo)}
+.slab-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line-2);background:var(--paper-2)}
+.chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.chip{width:54px;height:26px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:999px;font-family:var(--mono);font-size:9.5px;color:var(--ink-2);transition:all .3s var(--eo)}
 .chip[aria-pressed="true"]{border-color:var(--brand);color:var(--brand-dk);border-width:1.5px;background:var(--peach)}
 .chip:hover{border-color:var(--ink)}
 
-.slab-grid{display:grid;grid-template-columns:210px 1fr 214px}
-.slab-grid>*{min-width:0}
-
-.spec-l{border-right:1px solid var(--line-2);padding:22px 18px;display:flex;flex-direction:column;gap:14px}
-.spec-l h3{font-family:var(--display);font-weight:400;font-size:29px;line-height:.94;text-transform:uppercase}
-.spec-l p{font-size:11.5px;line-height:1.55;color:var(--mute)}
+.slab-grid{display:grid;grid-template-columns:238px minmax(0,1fr) 234px}
+.spec-l{border-right:1px solid var(--line-2);padding:24px 20px;display:flex;flex-direction:column;gap:14px}
+.spec-l h3{font-family:var(--display);font-weight:400;font-size:30px;line-height:.94;text-transform:uppercase}
+.spec-l p{font-size:12px;line-height:1.55;color:var(--mute)}
 .spec-l .hand{font-family:var(--hand);font-size:19px;color:var(--brand-dk);line-height:1.15;transform:rotate(-2deg);transform-origin:left}
 
 .spec-c{display:flex;flex-direction:column}
-.specbox{background:var(--peach);padding:22px 24px 26px;border-bottom:1px solid var(--line-2)}
+.specbox{background:var(--peach);padding:24px 26px 28px;border-bottom:1px solid var(--line-2)}
 .specbox>.mono{color:var(--brand-dk);display:block;margin-bottom:16px}
-.srow{display:grid;grid-template-columns:132px 1fr;gap:16px;padding:9px 0;border-top:1px dotted rgba(22,24,26,.22)}
+.srow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:10px 0;border-top:1px dotted rgba(22,24,26,.22)}
 .srow:first-of-type{border-top:0}
 .srow dt{font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--ink-2);padding-top:2px}
-.srow dd{font-size:13px;line-height:1.5}
+.srow dd{font-size:13.5px;line-height:1.5}
 .jur{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
 .jur span{font-family:var(--mono);font-size:9px;letter-spacing:.1em;border:1px solid rgba(22,24,26,.28);border-radius:4px;padding:4px 7px}
 .itemcode{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--ink-2);margin-top:20px;display:block}
 
-.delivbox{padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex:1}
-.delivbox .l{max-width:400px}
+.delivbox{padding:24px 26px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex:1}
+.delivbox .l{max-width:520px}
 .delivbox .l .mono{display:block;margin-bottom:10px;color:var(--mute)}
-.delivbox .l p{font-size:13px;line-height:1.55;color:var(--ink-2)}
-.delivbox .big{font-family:var(--display);font-size:clamp(34px,4.4vw,54px);line-height:.88;color:var(--brand);text-transform:uppercase;white-space:nowrap}
+.delivbox .l p{font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.delivbox .big{font-family:var(--display);font-size:clamp(34px,3.4vw,58px);line-height:.88;color:var(--brand);text-transform:uppercase;white-space:nowrap}
 
 .spec-r{border-left:1px solid var(--line-2);display:flex;flex-direction:column}
 .spec-r .th{border-bottom:1px solid var(--line);padding:10px;background:var(--paper)}
-.spec-r .th img{border-radius:8px;height:76px;width:100%;object-fit:cover;filter:saturate(.9)}
+.spec-r .th img{border-radius:8px;height:86px;width:100%;object-fit:cover}
 .spec-r .th span{font-family:var(--mono);font-size:9px;letter-spacing:.11em;color:var(--mute);display:block;margin-top:7px}
-.quote{background:var(--brand);color:#fff;padding:18px 16px;flex:1;display:flex;flex-direction:column;gap:9px;transition:background .35s var(--eo)}
+.quote{background:var(--brand);color:#fff;padding:20px 18px;flex:1;display:flex;flex-direction:column;gap:9px;transition:background .35s var(--eo)}
 .quote:hover{background:var(--brand-dk)}
-.quote b{font-family:var(--display);font-size:21px;line-height:1;text-transform:uppercase;letter-spacing:.02em}
-.quote p{font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.9)}
+.quote b{font-family:var(--display);font-size:23px;line-height:1;text-transform:uppercase}
+.quote p{font-size:12px;line-height:1.5;color:rgba(255,255,255,.9)}
 .quote .go{margin-top:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;display:flex;align-items:center;gap:7px}
 
 /* ============================================================
-   3 — WORK
+   WORK
    ============================================================ */
-.work{display:grid;grid-template-columns:1fr 336px;gap:26px;align-items:start}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
 .wtable{border-top:1.5px solid var(--ink)}
-.whead{display:grid;grid-template-columns:1fr 132px 76px 108px;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.whead{display:grid;grid-template-columns:minmax(0,1fr) 140px 84px 112px;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
 .whead span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--mute)}
 .whead span:nth-child(n+3){text-align:right}
-.wrow{
-  display:grid;grid-template-columns:1fr 132px 76px 108px;gap:14px;align-items:center;
-  padding:15px 0;border-bottom:1px solid var(--line);
-  transition:background .3s var(--eo),padding-left .3s var(--eo)}
-.wrow:hover{background:var(--sheet);padding-left:10px}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) 140px 84px 112px;gap:14px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);transition:background .3s var(--eo),padding-left .3s var(--eo)}
+.wrow:hover{background:var(--paper);padding-left:10px}
 .wname{display:flex;align-items:center;gap:14px;min-width:0}
-.wname img{width:52px;height:52px;border-radius:9px;object-fit:cover;border:1px solid var(--line);flex:none}
-.wname b{display:block;font-size:14.5px;font-weight:700;line-height:1.3}
-.wname span{font-size:11.5px;color:var(--mute)}
+.wname img{width:56px;height:56px;border-radius:9px;object-fit:cover;border:1px solid var(--line);flex:none}
+.wname b{display:block;font-size:15px;font-weight:700;line-height:1.3}
+.wname>span>span{font-size:11.5px;color:var(--mute)}
 .wrow .ty{font-size:12.5px;color:var(--ink-2)}
-.wrow .sh{text-align:right;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--brand-dk)}
+.wrow .sh{text-align:right;font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--brand-dk)}
 .wrow .st{text-align:right;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--mute)}
 .wrow .st b{color:var(--ink);font-weight:700}
 
-.summary{padding:22px 22px 24px;position:sticky;top:24px}
-.summary h3{font-family:var(--display);font-weight:400;font-size:25px;text-transform:uppercase;margin-bottom:16px}
-.field{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;margin-bottom:8px;background:var(--paper)}
+.summary{padding:24px 22px 26px}
+.summary h3{font-family:var(--display);font-weight:400;font-size:26px;text-transform:uppercase;margin-bottom:16px}
+.field{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;margin-bottom:8px;background:var(--paper)}
 .field span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--mute)}
 .field b{font-size:12.5px;font-weight:600}
 .totals{border-top:1px solid var(--line-2);margin-top:16px;padding-top:12px}
 .trow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;font-size:12.5px;color:var(--ink-2)}
 .trow b{font-weight:700;color:var(--ink)}
 .trow.grand{border-top:1px dotted var(--line-2);margin-top:8px;padding-top:11px}
-.trow.grand b{font-family:var(--display);font-weight:400;font-size:24px;color:var(--brand)}
+.trow.grand b{font-family:var(--display);font-weight:400;font-size:25px;color:var(--brand)}
 .summary .pill{width:100%;justify-content:center;margin-top:16px}
 
 /* ============================================================
-   4 — PROCESS
+   PROCESS
    ============================================================ */
 .proc{border-top:1.5px solid var(--ink)}
-.prow{
-  display:grid;grid-template-columns:74px 216px 1fr 118px;gap:24px;align-items:baseline;
-  padding:22px 0;border-bottom:1px solid var(--line);position:relative;
-  transition:padding-left .35s var(--eo)}
+.prow{display:grid;grid-template-columns:74px 230px minmax(0,1fr) 130px;gap:22px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line);position:relative;transition:padding-left .35s var(--eo)}
 .prow:hover{padding-left:12px}
 .prow::before{content:'';position:absolute;left:0;bottom:-1px;height:1px;width:0;background:var(--brand);transition:width .5s var(--eo)}
 .prow:hover::before{width:100%}
-.prow .n{font-family:var(--display);font-size:34px;line-height:1;color:var(--paper-2);transition:color .35s var(--eo)}
+.prow .n{font-family:var(--display);font-size:36px;line-height:1;color:var(--paper-2);transition:color .35s var(--eo)}
 .prow:hover .n{color:var(--brand)}
-.prow h3{font-family:var(--display);font-weight:400;font-size:23px;text-transform:uppercase;line-height:1}
-.prow p{font-size:13px;line-height:1.55;color:var(--ink-2);max-width:820px}
+.prow h3{font-family:var(--display);font-weight:400;font-size:24px;text-transform:uppercase;line-height:1}
+.prow p{font-size:13.5px;line-height:1.55;color:var(--ink-2);max-width:760px}
 .prow .d{text-align:right;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--brand-dk);font-weight:700}
 
 /* ============================================================
-   5 — AREAS
+   AREAS
    ============================================================ */
-.areas{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.areas a{
-  border:1px solid var(--line-2);border-radius:999px;padding:11px 20px;
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  transition:all .3s var(--eo)}
+.areas{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.areas a{border:1px solid var(--line-2);border-radius:999px;padding:11px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;transition:all .3s var(--eo)}
 .areas a:hover{background:var(--ink);color:var(--sheet);border-color:var(--ink)}
 
 /* ============================================================
-   6 — CONTACT SLAB + FOOTER
+   CONTACT + FOOTER
    ============================================================ */
 .slabdark{
-  background:var(--dark);color:#F7F5F1;border-radius:22px;padding:46px 44px;
-  display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;
+  background:var(--dark);color:#F7F5F1;border-radius:20px;padding:44px 42px;
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:38px;align-items:center;
   background-image:linear-gradient(rgba(247,245,241,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(247,245,241,.05) 1px,transparent 1px);
   background-size:44px 44px;
 }
-.slabdark h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,4.4vw,50px);line-height:.95;text-transform:uppercase}
+.slabdark h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,3.4vw,54px);line-height:.95;text-transform:uppercase}
 .slabdark h2 em{font-style:normal;color:var(--brand)}
-.slabdark .lede{font-size:13.5px;line-height:1.6;color:rgba(247,245,241,.68);margin-top:14px;max-width:400px}
+.slabdark .lede{font-size:13.5px;line-height:1.6;color:rgba(247,245,241,.68);margin-top:14px;max-width:440px}
 .ctas{display:flex;flex-direction:column;gap:11px}
-.cbtn{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  border:1px solid rgba(247,245,241,.26);border-radius:12px;padding:16px 20px;
-  transition:all .35s var(--eo)}
+.cbtn{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid rgba(247,245,241,.26);border-radius:12px;padding:16px 20px;transition:all .35s var(--eo)}
 .cbtn span{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;color:rgba(247,245,241,.6);display:block;margin-bottom:4px}
-.cbtn b{font-family:var(--display);font-weight:400;font-size:23px;letter-spacing:.01em}
+.cbtn b{font-family:var(--display);font-weight:400;font-size:23px;word-break:break-word}
 .cbtn i{font-style:normal;color:var(--brand);font-size:20px;transition:transform .35s var(--eo)}
 .cbtn:hover{background:var(--brand);border-color:var(--brand)}
 .cbtn:hover span{color:rgba(255,255,255,.75)}
 .cbtn:hover i{color:#fff;transform:translateX(5px)}
 
-footer{padding:52px 0 40px;border-top:1px solid var(--line);margin-top:74px}
-.fgrid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:32px}
+.foot{padding:40px var(--pad) 34px;border-top:1px solid var(--line)}
+.fgrid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:30px}
 .fgrid h4{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--mute);margin-bottom:14px;text-transform:uppercase}
 .fgrid ul{list-style:none;display:flex;flex-direction:column;gap:8px}
 .fgrid li a{font-size:13px;color:var(--ink-2);transition:color .25s var(--eo)}
 .fgrid li a:hover{color:var(--brand-dk)}
 .fbrand b{font-family:var(--display);font-weight:400;font-size:26px;text-transform:uppercase;display:block;line-height:1}
-.fbrand p{font-size:12.5px;color:var(--mute);margin-top:10px;max-width:270px;line-height:1.55}
-.fbot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--line)}
+.fbrand p{font-size:12.5px;color:var(--mute);margin-top:10px;max-width:280px;line-height:1.55}
+.fbot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:34px;padding-top:18px;border-top:1px solid var(--line)}
 .fbot span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--mute)}
 
 /* ============================================================
-   RESPONSIVE
+   WIDE MONITORS — grow the components, don't just stretch them
    ============================================================ */
-
-/* --- wide monitors: grow the components, don't just stretch them --- */
 @media(min-width:1500px){
   body{font-size:17px}
   .mono{font-size:11px}
-  section{padding:96px 0}
-  .win{grid-template-columns:286px 1fr 274px}
-  .rail-l,.rail-r{padding:24px 22px}
-  .main{padding:22px 38px 32px}
-  .log p{font-size:12.5px}
-  .plate{height:168px}
-  .plate .lab b{font-size:27px}
-  .qcard{min-height:148px;padding:15px}
+  .app{grid-template-columns:310px minmax(0,1fr) 292px}
+  .plate{height:180px}
+  .plate .lab b{font-size:28px}
+  .qcard{min-height:160px;padding:15px}
   .qcard p{font-size:14px}
   .qcard .thumb{width:54px;height:42px}
-  .irow div b{font-size:12.5px}
-  .irow div span{font-size:11.5px}
-  .svc4{gap:18px}
-  .svc4 article{min-height:280px;padding:26px 24px 28px}
-  .svc4 h3{font-size:29px}
+  .svc4 article{min-height:264px;padding:24px 22px 26px}
+  .svc4 h3{font-size:28px}
   .svc4 p{font-size:14px}
-  .slab-grid{grid-template-columns:300px 1fr 300px}
-  .spec-l{padding:30px 26px}
-  .spec-l h3{font-size:36px}
-  .spec-l p{font-size:13px}
-  .specbox{padding:30px 32px 34px}
-  .srow{grid-template-columns:170px 1fr;padding:11px 0}
+  .slab-grid{grid-template-columns:290px minmax(0,1fr) 280px}
+  .spec-l h3{font-size:35px}
+  .srow{grid-template-columns:170px minmax(0,1fr)}
   .srow dd{font-size:14.5px}
-  .delivbox{padding:28px 32px}
-  .delivbox .l{max-width:560px}
-  .delivbox .l p{font-size:14px}
-  .spec-r .th img{height:104px}
-  .quote b{font-size:26px}
-  .quote p{font-size:12.5px}
-  .work{grid-template-columns:1fr 420px;gap:38px}
-  .whead,.wrow{grid-template-columns:1fr 180px 110px 150px}
+  .spec-r .th img{height:100px}
+  .work{grid-template-columns:minmax(0,1fr) 400px;gap:36px}
+  .whead,.wrow{grid-template-columns:minmax(0,1fr) 170px 100px 140px}
   .wname img{width:64px;height:64px}
   .wname b{font-size:16px}
-  .wrow .sh{font-size:15px}
-  .summary{padding:28px 28px 30px}
-  .prow{grid-template-columns:110px 300px minmax(0,1fr) 170px;padding:28px 0}
-  .prow .n{font-size:46px}
-  .prow h3{font-size:28px}
+  .prow{grid-template-columns:100px 280px minmax(0,1fr) 150px;padding:26px 0}
+  .prow .n{font-size:44px}
+  .prow h3{font-size:27px}
   .prow p{font-size:14px}
-  .slabdark{padding:62px 58px}
-  .cbtn{padding:20px 24px}
-  .cbtn b{font-size:26px}
+  .cbtn b{font-size:25px}
   .fgrid li a{font-size:14px}
 }
 
-@media(max-width:1100px){
-  .win{grid-template-columns:190px 1fr}
-  .rail-r{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);
-    flex-direction:row;flex-wrap:wrap;align-items:center;gap:18px}
-  .rail-r .insights{flex:1;min-width:260px;border-top:0}
+/* ============================================================
+   NARROWER — unpin the rails and stack
+   ============================================================ */
+@media(max-width:1240px){
+  .app{grid-template-columns:246px minmax(0,1fr)}
+  .rail-r{position:static;max-height:none;grid-column:1/-1;
+    border-top:1px solid var(--line);flex-direction:row;flex-wrap:wrap;align-items:center;gap:18px}
+  .rail-r .insights{flex:1;min-width:280px;border-top:0}
   .rail-r .insights .ih{padding-top:0}
-  .rail-r .callpill{margin-top:0;width:auto}
-  .slab-grid{grid-template-columns:180px 1fr}
+  .rail-r .pill.solid{width:auto}
+  .rail-note{display:none}
+  .feed{border-right:0}
+  .svc4{grid-template-columns:repeat(2,1fr)}
+  .slab-grid{grid-template-columns:200px minmax(0,1fr)}
   .spec-r{grid-column:1/-1;border-left:0;border-top:1px solid var(--line-2);flex-direction:row}
   .spec-r .th{border-bottom:0;border-right:1px solid var(--line);flex:1}
   .quote{flex:1.2}
-  .svc4{grid-template-columns:repeat(2,1fr)}
-  .work{grid-template-columns:1fr}
-  .summary{position:static}
+  .work{grid-template-columns:minmax(0,1fr)}
 }
-@media(max-width:820px){
-  section{padding:52px 0}
-  .win{grid-template-columns:1fr}
-  .rail-l{border-right:0;border-bottom:1px solid var(--line)}
-  .log{margin-top:0}
-  .main{padding:20px 18px 22px}
+@media(max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail-l{position:static;max-height:none;border-bottom:1px solid var(--line)}
+  .feed{border-left:0}
   .qs{grid-template-columns:1fr}
   .qcard{min-height:0;flex-direction:row;align-items:center}
   .qcard .qtop{flex-direction:column;gap:6px}
   .qcard p{margin-top:0}
-  .slab-grid{grid-template-columns:1fr}
+  .slab-grid{grid-template-columns:minmax(0,1fr)}
   .spec-l{border-right:0;border-bottom:1px solid var(--line-2)}
   .spec-r{flex-direction:column}
   .spec-r .th{border-right:0;border-bottom:1px solid var(--line)}
   .whead{display:none}
-  .wrow{grid-template-columns:1fr auto;gap:8px 14px;padding:16px 0}
+  .wrow{grid-template-columns:minmax(0,1fr) auto;gap:8px 14px}
   .wrow .wname{grid-column:1/-1}
-  .wrow .sh,.wrow .st{text-align:left}
-  .wrow .st{text-align:right}
-  .prow{grid-template-columns:52px 1fr;gap:8px 16px}
-  .prow p{grid-column:2}
-  .prow .d{grid-column:2;text-align:left}
-  .slabdark{grid-template-columns:1fr;padding:34px 24px}
-  .fgrid{grid-template-columns:repeat(2,1fr)}
+  .wrow .sh{text-align:left}
+  .prow{grid-template-columns:52px minmax(0,1fr);gap:8px 16px}
+  .prow p,.prow .d{grid-column:2}
+  .prow .d{text-align:left}
+  .slabdark{grid-template-columns:minmax(0,1fr);padding:30px 22px}
   .delivbox{flex-direction:column}
+  .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-width:520px){
-  .wrap{padding:0 16px}
-  .svc4{grid-template-columns:1fr}
-  .plate{border-radius:16px;height:98px}
+@media(max-width:540px){
+  .svc4{grid-template-columns:minmax(0,1fr)}
+  .plate{border-radius:16px;height:104px}
   .plate .lab{padding:0 18px}
-  .fgrid{grid-template-columns:1fr}
+  .plate .lab b{font-size:19px}
+  .fgrid{grid-template-columns:minmax(0,1fr)}
+  .cbtn b{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -468,40 +443,44 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);margin-top:74px}
 </head>
 <body>
 
-<!-- ==========================================================
-     1 — HERO
-     ========================================================== -->
-<header class="hero">
-<div class="wrap">
-  <div class="win">
+<div class="page">
+<div class="app">
 
-    <!-- left rail -->
-    <aside class="rail-l">
-      <a class="newbtn" href="#contact"><b>NEW SET</b><i aria-hidden="true"></i></a>
-      <nav class="nav-l">
-        <a href="#top" class="on"><svg viewBox="0 0 24 24"><path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Home</a>
-        <a href="#services"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Services</a>
-        <a href="#work"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4z"/><path d="M9 7V4h6v3"/></svg>Work</a>
-        <a href="#contact"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="m4 6 8 6 8-6"/></svg>Contact</a>
-      </nav>
+  <!-- ======================= LEFT RAIL (pinned) ======================= -->
+  <aside class="rail rail-l">
+    <a class="newbtn" href="#contact"><b>NEW SET</b><i aria-hidden="true"></i></a>
+    <nav class="nav-l">
+      <a href="#top" class="on"><svg viewBox="0 0 24 24"><path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+      <a href="#services"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Services</a>
+      <a href="#work"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4z"/><path d="M9 7V4h6v3"/></svg>Work</a>
+      <a href="#process"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Process</a>
+      <a href="#contact"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="m4 6 8 6 8-6"/></svg>Contact</a>
+    </nav>
 
-      <div class="log">
-        <div class="log-h"><b>JUNE</b><span>2026</span></div>
-        <p>22-sheet permit set issued — Gilbert custom, 4,180&nbsp;sf on a corner lot.</p>
-        <p>Twilight render package approved by owner before documentation began.</p>
-        <div class="log-h"><b>MAY</b><span>2026</span></div>
-        <p>Hillside estate, Queen Creek — grade and view-corridor study resolved in 3D.</p>
-        <p>Third-round redlines answered in 36 hours. Permit in hand.</p>
-      </div>
-    </aside>
+    <div class="log">
+      <div class="log-h"><b>JUNE</b><span>2026</span></div>
+      <p>22-sheet permit set issued — Gilbert custom, 4,180&nbsp;sf on a corner lot.</p>
+      <p>Twilight render package approved by owner before documentation began.</p>
+      <div class="log-h"><b>MAY</b><span>2026</span></div>
+      <p>Hillside estate, Queen Creek — grade and view-corridor study resolved in 3D.</p>
+      <p>Third-round redlines answered in 36 hours. Permit in hand.</p>
+    </div>
 
-    <!-- center -->
-    <main class="main" id="top">
-      <div class="wordmark">
-        <span class="wm"><i aria-hidden="true"></i>QUEST DRAFTING</span>
-        <span class="mono mute">SHT A-001 · GILBERT AZ</span>
-      </div>
+    <div class="railcta">
+      <a class="pill" href="#work">View the work &rarr;</a>
+    </div>
+  </aside>
 
+  <!-- ======================= CENTRE FEED ======================= -->
+  <div class="feed">
+
+    <div class="wordmark">
+      <span class="wm"><i aria-hidden="true"></i>QUEST DRAFTING</span>
+      <span class="mono mute">SHT A-001 · GILBERT AZ</span>
+    </div>
+
+    <!-- ---------- hero ---------- -->
+    <section class="fsec hero-sec" id="top">
       <div class="main-top">
         <h1>Start a Drawing&nbsp;Set<span class="cur">_</span></h1>
         <a class="orb" href="#contact" aria-label="Request a quote">
@@ -550,296 +529,278 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);margin-top:74px}
         <span><b>REV</b>A</span>
         <span class="stamp">ISSUED FOR PERMIT</span>
       </div>
-    </main>
+    </section>
 
-    <!-- right rail -->
-    <aside class="rail-r">
-      <div class="mark" aria-hidden="true">Q</div>
-      <div class="who">
-        <b>Quest Drafting &amp; Design</b>
-        <span>Gilbert, Arizona</span>
+    <!-- ---------- services ---------- -->
+    <section class="fsec" id="services">
+      <div class="shead">
+        <div>
+          <span class="mono mute">SVC · 01–04 · Gilbert, AZ</span>
+          <h2>A complete practice,<br>under one roof</h2>
+        </div>
+        <div class="tick"><i aria-hidden="true"></i><span class="mono mute">Design → 3D → Documents → Permit</span></div>
       </div>
 
-      <div class="insights">
-        <span class="ih">INSIGHTS</span>
-        <div class="irow"><i>CODE</i><div><b>2024 cycle</b><span>IBC &middot; IRC &middot; IECC</span></div></div>
-        <div class="irow"><i>SET</i><div><b>~22 sheets</b><span>Typical residential</span></div></div>
-        <div class="irow"><i>DISC</i><div><b>6 disciplines</b><span>Coordinated in one set</span></div></div>
-        <div class="irow"><i>TIME</i><div><b>3–5 weeks</b><span>Design to permit-ready</span></div></div>
+      <div class="svc4">
+        <article class="box lift">
+          <div class="top"><span class="no">SVC·01</span><span class="tag">A-100</span></div>
+          <h3>Architectural<br>Design</h3>
+          <p>From first massing study to a resolved floor plan — shaped by your lot, your zoning, and how you actually live.</p>
+          <span class="arrow">READ MORE &rarr;</span>
+        </article>
+        <article class="box lift">
+          <div class="top"><span class="no">SVC·02</span><span class="tag">3D·VIS</span></div>
+          <h3>3D<br>Visualization</h3>
+          <p>You approve the home itself — not a flat line drawing you have to imagine in three dimensions.</p>
+          <span class="arrow">READ MORE &rarr;</span>
+        </article>
+        <article class="box lift">
+          <div class="top"><span class="no">SVC·03</span><span class="tag">22·SHT</span></div>
+          <h3>Construction<br>Documents</h3>
+          <p>The complete, coordinated set your builder and your city both need — typically around 22 sheets.</p>
+          <span class="arrow">READ MORE &rarr;</span>
+        </article>
+        <article class="box lift">
+          <div class="top"><span class="no">SVC·04</span><span class="tag">APPRVD</span></div>
+          <h3>Permit<br>Stewardship</h3>
+          <p>We don't hand you drawings and disappear — we stay with the submittal until the permit is in hand.</p>
+          <span class="arrow">READ MORE &rarr;</span>
+        </article>
       </div>
 
-      <a class="pill solid callpill" href="tel:+16023396455">(602) 339-6455</a>
-    </aside>
-
-  </div>
-</div>
-</header>
-
-<!-- ==========================================================
-     2 — SERVICES
-     ========================================================== -->
-<section id="services">
-<div class="wrap">
-  <div class="shead">
-    <div>
-      <span class="mono mute">SVC &middot; 01–04 &middot; Gilbert, AZ</span>
-      <h2>A complete practice,<br>under one roof</h2>
-    </div>
-    <div class="tick"><i aria-hidden="true"></i><span class="mono mute">Design → 3D → Documents → Permit</span></div>
-  </div>
-
-  <div class="svc4">
-    <article class="box lift">
-      <div class="top"><span class="no">SVC·01</span><span class="tag">A-100</span></div>
-      <h3>Architectural<br>Design</h3>
-      <p>From first massing study to a resolved floor plan — shaped by your lot, your zoning, and how you actually live.</p>
-      <span class="arrow">READ MORE &rarr;</span>
-    </article>
-    <article class="box lift">
-      <div class="top"><span class="no">SVC·02</span><span class="tag">3D·VIS</span></div>
-      <h3>3D<br>Visualization</h3>
-      <p>You approve the home itself — not a flat line drawing you have to imagine in three dimensions.</p>
-      <span class="arrow">READ MORE &rarr;</span>
-    </article>
-    <article class="box lift">
-      <div class="top"><span class="no">SVC·03</span><span class="tag">22·SHT</span></div>
-      <h3>Construction<br>Documents</h3>
-      <p>The complete, coordinated set your builder and your city both need — typically around 22 sheets.</p>
-      <span class="arrow">READ MORE &rarr;</span>
-    </article>
-    <article class="box lift">
-      <div class="top"><span class="no">SVC·04</span><span class="tag">APPRVD</span></div>
-      <h3>Permit<br>Stewardship</h3>
-      <p>We don't hand you drawings and disappear — we stay with the submittal until the permit is in hand.</p>
-      <span class="arrow">READ MORE &rarr;</span>
-    </article>
-  </div>
-
-  <!-- spec sheet slab -->
-  <div class="slab">
-    <div class="slab-bar">
-      <div class="chips" role="group" aria-label="Sheet size">
-        <span class="mono mute" style="margin-right:4px">SHEET SIZE</span>
-        <button class="chip" aria-pressed="false">11×17</button>
-        <button class="chip" aria-pressed="false">18×24</button>
-        <button class="chip" aria-pressed="true">24×36</button>
-        <button class="chip" aria-pressed="false">30×42</button>
-      </div>
-      <span class="mono mute">ISSUED FOR PERMIT &middot; REV A</span>
-    </div>
-
-    <div class="slab-grid">
-      <div class="spec-l">
-        <h3>Residential<br>Drafting<br>Service Set</h3>
-        <p>One studio from the first sketch to the city's stamp. Design, visualization, documentation and permitting are not four vendors to juggle — they're one continuous process, and we own all of it.</p>
-        <span class="hand">no vendor juggling</span>
-      </div>
-
-      <div class="spec-c">
-        <div class="specbox">
-          <span class="mono">SPECIFICATION</span>
-          <dl>
-            <div class="srow"><dt>SCOPE</dt><dd>Custom homes, additions, casitas, ADUs, RV garages, hillside &amp; desert estates</dd></div>
-            <div class="srow"><dt>DELIVERABLES</dt><dd>Cover, site, floor, roof, elevation, section &amp; detail sheets — PDF + DWG</dd></div>
-            <div class="srow"><dt>CODE</dt><dd>2024 IBC · IRC · IECC cycle</dd></div>
-            <div class="srow"><dt>DISCIPLINES</dt><dd>Roughly 6, coordinated to agree on every sheet</dd></div>
-            <div class="srow"><dt>SHEET COUNT</dt><dd>~22 typical for a residential permit set</dd></div>
-          </dl>
-          <div class="jur">
-            <span>GILBERT</span><span>QUEEN CREEK</span><span>MESA</span>
-            <span>CHANDLER</span><span>PHOENIX</span><span>SCOTTSDALE</span><span>MARICOPA CO.</span>
+      <div class="slab">
+        <div class="slab-bar">
+          <div class="chips" role="group" aria-label="Sheet size">
+            <span class="mono mute" style="margin-right:4px">SHEET SIZE</span>
+            <button class="chip" aria-pressed="false">11×17</button>
+            <button class="chip" aria-pressed="false">18×24</button>
+            <button class="chip" aria-pressed="true">24×36</button>
+            <button class="chip" aria-pressed="false">30×42</button>
           </div>
-          <span class="itemcode">ITEM CODE — QDD·A-001·REV·A</span>
+          <span class="mono mute">ISSUED FOR PERMIT · REV A</span>
         </div>
 
-        <div class="delivbox">
-          <div class="l">
-            <span class="mono">DELIVERY</span>
-            <p>Permit-ready set issued three to five weeks from approved design. Plan-review redlines answered inside 48 hours, resubmittals managed until approval.</p>
+        <div class="slab-grid">
+          <div class="spec-l">
+            <h3>Residential<br>Drafting<br>Service Set</h3>
+            <p>One studio from the first sketch to the city's stamp. Design, visualization, documentation and permitting are not four vendors to juggle — they're one continuous process, and we own all of it.</p>
+            <span class="hand">no vendor juggling</span>
           </div>
-          <div class="big">3–5<br>WKS</div>
+
+          <div class="spec-c">
+            <div class="specbox">
+              <span class="mono">SPECIFICATION</span>
+              <dl>
+                <div class="srow"><dt>SCOPE</dt><dd>Custom homes, additions, casitas, ADUs, RV garages, hillside &amp; desert estates</dd></div>
+                <div class="srow"><dt>DELIVERABLES</dt><dd>Cover, site, floor, roof, elevation, section &amp; detail sheets — PDF + DWG</dd></div>
+                <div class="srow"><dt>CODE</dt><dd>2024 IBC · IRC · IECC cycle</dd></div>
+                <div class="srow"><dt>DISCIPLINES</dt><dd>Roughly 6, coordinated to agree on every sheet</dd></div>
+                <div class="srow"><dt>SHEET COUNT</dt><dd>~22 typical for a residential permit set</dd></div>
+              </dl>
+              <div class="jur">
+                <span>GILBERT</span><span>QUEEN CREEK</span><span>MESA</span>
+                <span>CHANDLER</span><span>PHOENIX</span><span>SCOTTSDALE</span><span>MARICOPA CO.</span>
+              </div>
+              <span class="itemcode">ITEM CODE — QDD·A-001·REV·A</span>
+            </div>
+
+            <div class="delivbox">
+              <div class="l">
+                <span class="mono">DELIVERY</span>
+                <p>Permit-ready set issued three to five weeks from approved design. Plan-review redlines answered inside 48 hours, resubmittals managed until approval.</p>
+              </div>
+              <div class="big">3–5<br>WKS</div>
+            </div>
+          </div>
+
+          <div class="spec-r">
+            <div class="th"><img src="public/assets/sheet-elevations.webp" alt="Exterior elevation sheet"><span>A-201 · ELEVATIONS</span></div>
+            <div class="th"><img src="public/assets/sheet-site-plan.webp" alt="Site plan sheet"><span>A-101 · SITE PLAN</span></div>
+            <a class="quote" href="#contact">
+              <b>Request<br>a Quote</b>
+              <p>Send your lot and a sketch. Fixed fee back in one business day.</p>
+              <span class="go">GET STARTED &rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- work ---------- -->
+    <section class="fsec" id="work">
+      <div class="shead">
+        <div>
+          <span class="mono mute">Selected work</span>
+          <h2>Homes we've<br>drawn to stamp</h2>
+        </div>
+        <span class="mono" style="color:var(--brand-dk)">4 PROJECTS</span>
+      </div>
+
+      <div class="work">
+        <div class="wtable">
+          <div class="whead"><span>Project</span><span>Type</span><span>Sheets</span><span>Status</span></div>
+
+          <div class="wrow">
+            <div class="wname"><img src="public/assets/render-pool-twilight.webp" alt=""><span><b>Modern Estate · Twilight</b><span>Gilbert, AZ · 4,180 sf</span></span></div>
+            <span class="ty">New Build</span><span class="sh">24</span><span class="st"><b>PERMITTED</b></span>
+          </div>
+          <div class="wrow">
+            <div class="wname"><img src="public/assets/render-greatroom.webp" alt=""><span><b>Hillside · Great Room</b><span>Queen Creek, AZ</span></span></div>
+            <span class="ty">Interior / 3D</span><span class="sh">18</span><span class="st"><b>ISSUED</b></span>
+          </div>
+          <div class="wrow">
+            <div class="wname"><img src="public/assets/render-motorcourt.webp" alt=""><span><b>Stone · Motor Court</b><span>Scottsdale, AZ</span></span></div>
+            <span class="ty">New Build</span><span class="sh">26</span><span class="st"><b>PERMITTED</b></span>
+          </div>
+          <div class="wrow">
+            <div class="wname"><img src="public/assets/render-night-stars.webp" alt=""><span><b>Desert · Night Study</b><span>Mesa, AZ</span></span></div>
+            <span class="ty">Concept / 3D</span><span class="sh">8</span><span class="st"><b>IN REVIEW</b></span>
+          </div>
+        </div>
+
+        <aside class="summary box">
+          <h3>Project Summary</h3>
+          <div class="field"><span>JURISDICTION</span><b>Gilbert, AZ</b></div>
+          <div class="field"><span>SHEET SIZE</span><b>24 × 36</b></div>
+          <div class="field"><span>DELIVERABLES</span><b>PDF + DWG</b></div>
+          <div class="field"><span>CODE CYCLE</span><b>2024 IRC</b></div>
+
+          <div class="totals">
+            <div class="trow"><span>Typical sheet count</span><b>22</b></div>
+            <div class="trow"><span>Coordinated disciplines</span><b>6</b></div>
+            <div class="trow"><span>Redline turnaround</span><b>48 hrs</b></div>
+            <div class="trow grand"><span>Design to permit-ready</span><b>3–5 WKS</b></div>
+          </div>
+
+          <a class="pill dark" href="#contact">Start Your Set &rarr;</a>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- process ---------- -->
+    <section class="fsec" id="process">
+      <div class="shead">
+        <div>
+          <span class="mono mute">How it runs</span>
+          <h2>Four steps,<br>one point of contact</h2>
         </div>
       </div>
 
-      <div class="spec-r">
-        <div class="th"><img src="public/assets/sheet-elevations.webp" alt="Exterior elevation sheet"><span>A-201 · ELEVATIONS</span></div>
-        <div class="th"><img src="public/assets/sheet-site-plan.webp" alt="Site plan sheet"><span>A-101 · SITE PLAN</span></div>
-        <a class="quote" href="#contact">
-          <b>Request<br>a Quote</b>
-          <p>Send your lot and a sketch. Fixed fee back in one business day.</p>
-          <span class="go">GET STARTED &rarr;</span>
-        </a>
+      <div class="proc">
+        <div class="prow">
+          <span class="n">01</span><h3>Consult</h3>
+          <p>We walk your lot, your survey and your wish list, then tell you what the jurisdiction will actually allow.</p>
+          <span class="d">2–3 DAYS</span>
+        </div>
+        <div class="prow">
+          <span class="n">02</span><h3>Design &amp; 3D</h3>
+          <p>Massing, floor plan and a photoreal model. You approve the house itself while changes are still free.</p>
+          <span class="d">1–2 WEEKS</span>
+        </div>
+        <div class="prow">
+          <span class="n">03</span><h3>Documents</h3>
+          <p>The full coordinated set — around 22 sheets across roughly 6 disciplines, drawn to the 2024 code cycle.</p>
+          <span class="d">2–3 WEEKS</span>
+        </div>
+        <div class="prow">
+          <span class="n">04</span><h3>Permit</h3>
+          <p>Checklist-formatted submittal, every redline answered, resubmittals managed until the stamp lands.</p>
+          <span class="d">JURISDICTION</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- areas ---------- -->
+    <section class="fsec" id="areas">
+      <span class="mono mute">Service area · Greater Phoenix</span>
+      <div class="areas">
+        <a href="#contact">Gilbert</a><a href="#contact">Queen Creek</a><a href="#contact">Mesa</a>
+        <a href="#contact">Chandler</a><a href="#contact">Phoenix</a><a href="#contact">Scottsdale</a>
+      </div>
+    </section>
+
+    <!-- ---------- contact ---------- -->
+    <section class="fsec" id="contact">
+      <div class="slabdark">
+        <div>
+          <h2>Put your project<br>in the <em>queue</em></h2>
+          <p class="lede">Send your lot, your survey and whatever sketch you've got — napkin included. You'll have a fixed fee and a schedule back within one business day.</p>
+        </div>
+        <div class="ctas">
+          <a class="cbtn" href="tel:+16023396455">
+            <span style="flex:1"><span>CALL THE STUDIO</span><b>(602) 339-6455</b></span><i>&rarr;</i>
+          </a>
+          <a class="cbtn" href="mailto:info@questdraftinganddesign.com">
+            <span style="flex:1"><span>EMAIL</span><b>info@questdraftinganddesign.com</b></span><i>&rarr;</i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- footer ---------- -->
+    <div class="foot">
+      <div class="fgrid">
+        <div class="fbrand">
+          <b>Quest Drafting<br>&amp; Design LLC</b>
+          <p>Residential architectural drafting, 3D visualization and permit stewardship for Greater Phoenix, Arizona.</p>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Architectural Design</a></li>
+            <li><a href="#services">3D Visualization</a></li>
+            <li><a href="#services">Construction Documents</a></li>
+            <li><a href="#services">Permit Stewardship</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Studio</h4>
+          <ul>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#areas">Service Area</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+16023396455">(602) 339-6455</a></li>
+            <li><a href="mailto:info@questdraftinganddesign.com">info@questdraftinganddesign.com</a></li>
+            <li><a href="#areas">Gilbert, Arizona</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="fbot">
+        <span>© 2026 QUEST DRAFTING &amp; DESIGN LLC</span>
+        <span>SHEET A-001 · REV A · CREAM SHEET DIRECTION</span>
       </div>
     </div>
-  </div>
-</div>
-</section>
 
-<!-- ==========================================================
-     3 — WORK
-     ========================================================== -->
-<section id="work">
-<div class="wrap">
-  <div class="shead">
-    <div>
-      <span class="mono mute">Selected work</span>
-      <h2>Homes we've<br>drawn to stamp</h2>
-    </div>
-    <span class="mono" style="color:var(--brand-dk)">4 PROJECTS</span>
-  </div>
+  </div><!-- /feed -->
 
-  <div class="work">
-    <div class="wtable">
-      <div class="whead"><span>Project</span><span>Type</span><span>Sheets</span><span>Status</span></div>
-
-      <div class="wrow">
-        <div class="wname"><img src="public/assets/render-pool-twilight.webp" alt=""><span><b>Modern Estate · Twilight</b><span>Gilbert, AZ · 4,180 sf</span></span></div>
-        <span class="ty">New Build</span><span class="sh">24</span><span class="st"><b>PERMITTED</b></span>
-      </div>
-      <div class="wrow">
-        <div class="wname"><img src="public/assets/render-greatroom.webp" alt=""><span><b>Hillside · Great Room</b><span>Queen Creek, AZ</span></span></div>
-        <span class="ty">Interior / 3D</span><span class="sh">18</span><span class="st"><b>ISSUED</b></span>
-      </div>
-      <div class="wrow">
-        <div class="wname"><img src="public/assets/render-motorcourt.webp" alt=""><span><b>Stone · Motor Court</b><span>Scottsdale, AZ</span></span></div>
-        <span class="ty">New Build</span><span class="sh">26</span><span class="st"><b>PERMITTED</b></span>
-      </div>
-      <div class="wrow">
-        <div class="wname"><img src="public/assets/render-night-stars.webp" alt=""><span><b>Desert · Night Study</b><span>Mesa, AZ</span></span></div>
-        <span class="ty">Concept / 3D</span><span class="sh">8</span><span class="st"><b>IN REVIEW</b></span>
-      </div>
+  <!-- ======================= RIGHT RAIL (pinned) ======================= -->
+  <aside class="rail rail-r">
+    <div class="mark" aria-hidden="true">Q</div>
+    <div class="who">
+      <b>Quest Drafting &amp; Design</b>
+      <span>Gilbert, Arizona</span>
     </div>
 
-    <aside class="summary box">
-      <h3>Project Summary</h3>
-      <div class="field"><span>JURISDICTION</span><b>Gilbert, AZ</b></div>
-      <div class="field"><span>SHEET SIZE</span><b>24 × 36</b></div>
-      <div class="field"><span>DELIVERABLES</span><b>PDF + DWG</b></div>
-      <div class="field"><span>CODE CYCLE</span><b>2024 IRC</b></div>
+    <div class="insights">
+      <span class="ih">INSIGHTS</span>
+      <div class="irow"><i>CODE</i><div><b>2024 cycle</b><span>IBC · IRC · IECC</span></div></div>
+      <div class="irow"><i>SET</i><div><b>~22 sheets</b><span>Typical residential</span></div></div>
+      <div class="irow"><i>DISC</i><div><b>6 disciplines</b><span>Coordinated in one set</span></div></div>
+      <div class="irow"><i>TIME</i><div><b>3–5 weeks</b><span>Design to permit-ready</span></div></div>
+    </div>
 
-      <div class="totals">
-        <div class="trow"><span>Typical sheet count</span><b>22</b></div>
-        <div class="trow"><span>Coordinated disciplines</span><b>6</b></div>
-        <div class="trow"><span>Redline turnaround</span><b>48 hrs</b></div>
-        <div class="trow grand"><span>Design to permit-ready</span><b>3–5 WKS</b></div>
-      </div>
+    <a class="pill solid" href="tel:+16023396455">(602) 339-6455</a>
+    <p class="rail-note">Serving Gilbert, Queen Creek, Mesa, Chandler, Phoenix and Scottsdale.</p>
+  </aside>
 
-      <a class="pill dark" href="#contact">Start Your Set &rarr;</a>
-    </aside>
-  </div>
-</div>
-</section>
-
-<!-- ==========================================================
-     4 — PROCESS
-     ========================================================== -->
-<section id="process">
-<div class="wrap">
-  <div class="shead">
-    <div>
-      <span class="mono mute">How it runs</span>
-      <h2>Four steps,<br>one point of contact</h2>
-    </div>
-  </div>
-
-  <div class="proc">
-    <div class="prow">
-      <span class="n">01</span><h3>Consult</h3>
-      <p>We walk your lot, your survey and your wish list, then tell you what the jurisdiction will actually allow.</p>
-      <span class="d">2–3 DAYS</span>
-    </div>
-    <div class="prow">
-      <span class="n">02</span><h3>Design &amp; 3D</h3>
-      <p>Massing, floor plan and a photoreal model. You approve the house itself while changes are still free.</p>
-      <span class="d">1–2 WEEKS</span>
-    </div>
-    <div class="prow">
-      <span class="n">03</span><h3>Documents</h3>
-      <p>The full coordinated set — around 22 sheets across roughly 6 disciplines, drawn to the 2024 code cycle.</p>
-      <span class="d">2–3 WEEKS</span>
-    </div>
-    <div class="prow">
-      <span class="n">04</span><h3>Permit</h3>
-      <p>Checklist-formatted submittal, every redline answered, resubmittals managed until the stamp lands.</p>
-      <span class="d">JURISDICTION</span>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ==========================================================
-     5 — AREAS
-     ========================================================== -->
-<section id="areas" style="padding-top:0">
-<div class="wrap">
-  <span class="mono mute">Service area · Greater Phoenix</span>
-  <div class="areas">
-    <a href="#contact">Gilbert</a><a href="#contact">Queen Creek</a><a href="#contact">Mesa</a>
-    <a href="#contact">Chandler</a><a href="#contact">Phoenix</a><a href="#contact">Scottsdale</a>
-  </div>
-</div>
-</section>
-
-<!-- ==========================================================
-     6 — CONTACT + FOOTER
-     ========================================================== -->
-<section id="contact" style="padding-top:0">
-<div class="wrap">
-  <div class="slabdark">
-    <div>
-      <h2>Put your project<br>in the <em>queue</em></h2>
-      <p class="lede">Send your lot, your survey and whatever sketch you've got — napkin included. You'll have a fixed fee and a schedule back within one business day.</p>
-    </div>
-    <div class="ctas">
-      <a class="cbtn" href="tel:+16023396455">
-        <span style="flex:1"><span>CALL THE STUDIO</span><b>(602) 339-6455</b></span><i>&rarr;</i>
-      </a>
-      <a class="cbtn" href="mailto:info@questdraftinganddesign.com">
-        <span style="flex:1"><span>EMAIL</span><b>info@questdraftinganddesign.com</b></span><i>&rarr;</i>
-      </a>
-    </div>
-  </div>
-
-  <footer>
-    <div class="fgrid">
-      <div class="fbrand">
-        <b>Quest Drafting<br>&amp; Design LLC</b>
-        <p>Residential architectural drafting, 3D visualization and permit stewardship for Greater Phoenix, Arizona.</p>
-      </div>
-      <div>
-        <h4>Services</h4>
-        <ul>
-          <li><a href="#services">Architectural Design</a></li>
-          <li><a href="#services">3D Visualization</a></li>
-          <li><a href="#services">Construction Documents</a></li>
-          <li><a href="#services">Permit Stewardship</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Studio</h4>
-        <ul>
-          <li><a href="#work">Work</a></li>
-          <li><a href="#process">Process</a></li>
-          <li><a href="#areas">Service Area</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="tel:+16023396455">(602) 339-6455</a></li>
-          <li><a href="mailto:info@questdraftinganddesign.com">info@questdraftinganddesign.com</a></li>
-          <li><a href="#areas">Gilbert, Arizona</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="fbot">
-      <span>© 2026 QUEST DRAFTING &amp; DESIGN LLC</span>
-      <span>SHEET A-001 · REV A · CREAM SHEET DIRECTION</span>
-    </div>
-  </footer>
-</div>
-</section>
+</div><!-- /app -->
+</div><!-- /page -->
 
 <script>
 // sheet-size chips — single select
@@ -849,6 +810,21 @@ document.querySelectorAll('.chip').forEach(function(c){
     c.setAttribute('aria-pressed','true');
   });
 });
+
+// left-rail nav follows the section you're reading
+var links = [].slice.call(document.querySelectorAll('.nav-l a'));
+var targets = links.map(function(a){return document.querySelector(a.getAttribute('href'))}).filter(Boolean);
+if ('IntersectionObserver' in window && targets.length){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      links.forEach(function(a){
+        a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id);
+      });
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  targets.forEach(function(t){io.observe(t)});
+}
 </script>
 </body>
 </html>
