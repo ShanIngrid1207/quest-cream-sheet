@@ -42,13 +42,12 @@
 
   --r:16px;
   --eo:cubic-bezier(.23,1,.32,1);
-  --gut:clamp(14px,1.5vw,34px);   /* outer page gutter */
   --pad:clamp(20px,2.1vw,44px);   /* inner section padding */
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
-  font-family:var(--sans);background:var(--paper);color:var(--ink);
+  font-family:var(--sans);background:var(--sheet);color:var(--ink);
   font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;position:relative;
 }
 /* paper grain — keeps the cream from reading as flat plastic */
@@ -67,11 +66,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ============================================================
    THE SHELL
    ============================================================ */
-.page{padding:var(--gut)}
+/* true edge-to-edge: no gutter, no frame, no rounded corners —
+   the shell IS the browser window */
+.page{padding:0}
 .app{
-  border:1px solid var(--line-2);border-radius:22px;background:var(--sheet);
+  background:var(--sheet);min-height:100vh;
   display:grid;grid-template-columns:286px minmax(0,1fr) 274px;
-  box-shadow:0 26px 60px -44px rgba(22,24,26,.55);
   /* no overflow:hidden here — it would kill the sticky rails */
 }
 
@@ -179,7 +179,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hero-sec{
   display:flex;flex-direction:column;justify-content:space-between;
   gap:clamp(18px,2.4vh,34px);
-  min-height:calc(100vh - 150px);
+  /* fills the screen, but never stretches past a sane ceiling —
+     on a tall/portrait monitor space-between would otherwise
+     fling the headline, photo and cards to opposite ends */
+  min-height:min(calc(100vh - 64px),900px);
 }
 .main-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
 h1{
