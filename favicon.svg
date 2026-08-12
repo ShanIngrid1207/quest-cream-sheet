@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <mask id="fav-gap">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="84" cy="100" r="50" fill="#000"/>
+      <rect x="84" y="80" width="78" height="40" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="200" height="200" fill="#232527"/>
+  <g mask="url(#fav-gap)" fill="none" stroke="#B7B4AF" stroke-width="28">
+    <circle cx="100" cy="100" r="54"/>
+    <path d="M121 132 L170 184"/>
+    <path d="M100 100 H168"/>
+  </g>
+  <g fill="none" stroke="#E8552B" stroke-width="24">
+    <circle cx="84" cy="100" r="30"/>
+    <path d="M84 100 H146"/>
+  </g>
+</svg>
